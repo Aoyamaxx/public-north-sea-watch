@@ -1,0 +1,103 @@
+name: Deploy Frontend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: north-sea-watch
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Authenticate Docker to Google Cloud
+        run: |
+          gcloud auth configure-docker europe-west4-docker.pkg.dev
+
+      - name: Build and push Nginx image
+        working-directory: ./frontend
+        run: |
+          docker build --target production -t europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/frontend-nginx:${{ github.sha }} .
+          docker push europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/frontend-nginx:${{ github.sha }}
+      
+      - name: Build and push Rendertron image
+        working-directory: ./frontend
+        run: |
+          docker build --target rendertron -t europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/frontend-rendertron:${{ github.sha }} .
+          docker push europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/frontend-rendertron:${{ github.sha }}
+
+      - name: Deploy to Cloud Run with multiple containers
+        working-directory: ./frontend
+        run: |
+          # Replace image placeholders with actual image URIs
+          sed -e "s|\${NGINX_IMAGE}|europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/frontend-nginx:${{ github.sha }}|g" \
+              -e "s|\${RENDERTRON_IMAGE}|europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/frontend-rendertron:${{ github.sha }}|g" \
+              service.yaml > service-with-images.yaml
+          
+          # Deploy using the YAML configuration
+          gcloud run services replace service-with-images.yaml \
+            --region europe-west4 \
+            --platform managed
+          
+          # Make the service publicly accessible
+          gcloud run services add-iam-policy-binding frontend \
+            --region europe-west4 \
+            --member="allUsers" \
+            --role="roles/run.invoker"
+
+      - name: Update environment variables 
+        working-directory: ./frontend
+        run: |
+          # Create environment variables file for Cloud Run
+          echo "Creating environment variables file for Cloud Run"
+          echo "{" > env.json
+          echo "  \"NODE_ENV\": \"production\"," >> env.json
+          
+          # Read variables from .env.production and add them to the JSON
+          if [ -f .env.production ]; then
+            while IFS= read -r line || [[ -n "$line" ]]; do
+              # Skip empty lines and comments
+              if [[ -z "$line" || "$line" =~ ^# ]]; then
+                continue
+              fi
+              # Extract key and value
+              key=$(echo "$line" | cut -d= -f1)
+              value=$(echo "$line" | cut -d= -f2-)
+              # Add to JSON (with comma except for last line)
+              echo "  \"$key\": \"$value\"," >> env.json
+            done < .env.production
+          else
+            echo "Warning: .env.production file not found"
+          fi
+          
+          # Remove the last comma and close the JSON object
+          sed -i '$ s/,$//' env.json
+          echo "}" >> env.json
+          
+          # Display the generated JSON
+          echo "Generated environment variables JSON:"
+          cat env.json
+          
+          # Update the service with environment variables
+          gcloud run services update frontend \
+            --region europe-west4 \
+            --platform managed \
+            --env-vars-file env.json 

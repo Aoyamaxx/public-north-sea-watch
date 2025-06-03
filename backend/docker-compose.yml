@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      target: development
+    container_name: backend-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - type: bind
+        source: ./apps
+        target: /app/apps
+        consistency: consistent
+      - type: bind
+        source: ./manage.py
+        target: /app/manage.py
+        consistency: consistent
+      - type: bind
+        source: ./crontab
+        target: /etc/cron.d/cleanup-cron
+        consistency: consistent
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONPATH=/app/apps
+      - PATH=/home/appuser/.local/bin:/usr/local/bin:$PATH
+    depends_on:
+      - cloudsql-proxy
+    # Use direct command instead of watchmedo for now to ensure it works
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    # Add privileged mode to allow cron service to start
+    privileged: true
+    # Ensure we have permissions to manage services
+    cap_add:
+      - SYS_ADMIN
+
+  cloudsql-proxy:
+    image: gcr.io/cloudsql-docker/gce-proxy:latest
+    container_name: cloudsql-proxy
+    restart: unless-stopped
+    command: [
+      "/cloud_sql_proxy",
+      "-dir=/cloudsql",
+      "-instances=north-sea-watch:europe-west4:ais-database=tcp:0.0.0.0:5432",
+      "-credential_file=/secrets/cloudsql-auth.json"
+    ]
+    volumes:
+      - ./cloudsql-auth.json:/secrets/cloudsql-auth.json:ro
+
+volumes:
+  postgres_data:

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  frontend:
+    # build: .
+    build:
+      context: .
+      target: development
+    container_name: frontend-dev
+    ports:
+      - "3000:3000" # Development mode (React)
+      # - "8080:80"   # Production mode (Nginx)
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+        consistency: consistent
+      - type: volume
+        target: /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:8000 # Backend API running on port 8000
+    env_file:
+      - .env
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: ["yarn", "start"]
+    # healthcheck:
+    #   test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3

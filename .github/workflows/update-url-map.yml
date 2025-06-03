@@ -1,0 +1,31 @@
+name: Update URL Map Configuration
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-url-map:
+    name: Update URL Map Configuration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: north-sea-watch
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Make script executable
+        run: |
+          chmod +x ./scripts/update-url-map.sh
+
+      - name: Update URL Map Configuration
+        run: |
+          ./scripts/update-url-map.sh 

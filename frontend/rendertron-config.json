@@ -1,0 +1,24 @@
+{
+  "port": 3000,
+  "host": "0.0.0.0",
+  "width": 1280,
+  "height": 960,
+  "headless": true,
+  "timeout": 30000,
+  "cache": true,
+  "debug": true,
+  "middleware": {
+    "cache": {
+      "cacheDurationMinutes": 60,
+      "cacheMaxEntries": 100
+    }
+  },
+  "restrictedUrlPattern": "",
+  "renderOnly": [
+    "northseawatch\\.org",
+    "www\\.northseawatch\\.org"
+  ],
+  "reqHeaders": {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36 Rendertron"
+  }
+} 

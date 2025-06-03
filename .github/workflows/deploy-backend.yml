@@ -1,0 +1,98 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          project_id: north-sea-watch
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Authenticate Docker to Google Cloud
+        run: |
+          gcloud auth configure-docker europe-west4-docker.pkg.dev
+
+      - name: Copy Cloud SQL Auth JSON
+        run: |
+          echo '${{ secrets.CLOUDSQL_AUTH_JSON }}' > ./backend/cloudsql-auth.json
+
+      - name: Build and push Docker image
+        working-directory: ./backend
+        run: |
+          docker build --target production -t europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/backend:${{ github.sha }} .
+          docker push europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/backend:${{ github.sha }}
+
+      - name: Create env vars file for Cloud Run
+        working-directory: ./backend
+        run: |
+          echo "Creating environment variables file for Cloud Run"
+          echo "{" > env.json
+          while IFS= read -r line || [[ -n "$line" ]]; do
+            # Skip empty lines and comments
+            if [[ -z "$line" || "$line" =~ ^# ]]; then
+              continue
+            fi
+            # Extract key and value
+            key=$(echo "$line" | cut -d= -f1)
+            value=$(echo "$line" | cut -d= -f2-)
+            
+            # Override specific environment variables
+            if [[ "$key" == "DATABASE_URL" ]]; then
+              value="postgres://aoyamaxx:aoyamaxx@localhost:5432/backend"
+            fi
+
+            if [[ "$key" == "DB_HOST" ]]; then
+              value="localhost"
+            fi
+            
+            # Ensure ALLOWED_HOSTS includes all necessary domains
+            if [[ "$key" == "ALLOWED_HOSTS" ]]; then
+              value="northseawatch.org,api.northseawatch.org,*.northseawatch.org,*.run.app,backend-*-ez.a.run.app"
+            fi
+            
+            # Add to JSON (with comma except for last line)
+            echo "  \"$key\": \"$value\"," >> env.json
+          done < .env.production
+          
+          echo "  \"DB_HOST\": \"localhost\"," >> env.json
+          echo "  \"PYTHONPATH\": \"/app\"," >> env.json
+          
+          # Remove the last comma and close the JSON object
+          sed -i '$ s/,$//' env.json
+          echo "}" >> env.json
+          cat env.json
+
+      - name: Deploy to Cloud Run
+        working-directory: ./backend
+        run: |
+          gcloud run deploy backend \
+            --image europe-west4-docker.pkg.dev/north-sea-watch/docker-repo/backend:${{ github.sha }} \
+            --platform managed \
+            --region europe-west4 \
+            --allow-unauthenticated \
+            --port 8000 \
+            --no-use-http2 \
+            --env-vars-file env.json \
+            --add-cloudsql-instances north-sea-watch:europe-west4:ais-database \
+            --service-account cloud-sql-auth-proxy@north-sea-watch.iam.gserviceaccount.com \
+            --timeout 5m 

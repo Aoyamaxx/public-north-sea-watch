@@ -1,0 +1,990 @@
+/* ABM Tutorial Popup Styles */
+
+/* Overlay that covers the entire screen */
+.abm-tutorial-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Main tutorial popup container */
+.abm-tutorial {
+  background: white;
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  align-items: center;
+  width: 80%;
+  max-width: 900px;
+  height: 650px;
+  position: relative;
+  overflow: hidden;
+  animation: tutorial-fade-in 0.3s ease-out;
+}
+
+@keyframes tutorial-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Close button */
+.abm-tutorial-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: opacity 0.2s;
+}
+
+.abm-tutorial-close-button:hover {
+  opacity: 0.7;
+}
+
+.abm-tutorial-close-button svg {
+  width: 20px;
+  height: 20px;
+  color: #555;
+  transition: color 0.3s;
+}
+
+.abm-tutorial-close-button:hover svg {
+  color: #333;
+}
+
+/* Progress dots */
+.abm-tutorial-progress {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+  flex-shrink: 0;
+}
+
+.abm-tutorial-progress-dot {
+  font-size: 24px;
+  color: rgb(218, 218, 218);
+  margin: 0 5px;
+  transition: color 0.3s, font-weight 0.3s;
+}
+
+.abm-tutorial-progress-dot.visited {
+  color: rgb(111, 111, 111);
+}
+
+.abm-tutorial-progress-dot.active {
+  color: #3498db;
+  font-weight: bold;
+}
+
+/* Content container */
+.abm-tutorial-content {
+  flex-grow: 1;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y !important;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Individual tutorial pages */
+.abm-tutorial-page {
+  width: 100%;
+  padding: 0 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y !important;
+  min-height: 100%;
+}
+
+.abm-tutorial-page h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 26px;
+}
+
+.abm-tutorial-page h3 {
+  margin-bottom: 15px;
+  color: #3498db;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.abm-tutorial-page h4 {
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.abm-tutorial-page p {
+  margin-bottom: 15px;
+  line-height: 1.5;
+  color: #555;
+  text-align: center;
+}
+
+/* Visual elements for page 1 */
+.abm-tutorial-visual {
+  margin: 20px 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.abm-tutorial-simulation-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.abm-tutorial-grid {
+  width: 200px;
+  height: 120px;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.abm-tutorial-port {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.abm-tutorial-port.port-allow {
+  top: 20px;
+  left: 20px;
+  background: #2c3e50;
+}
+
+.abm-tutorial-port.port-ban {
+  top: 20px;
+  right: 20px;
+  background: #27ae60;
+}
+
+.abm-tutorial-port.port-subsidy {
+  bottom: 20px;
+  left: 20px;
+  background: #3498db;
+}
+
+.abm-tutorial-port.port-tax {
+  bottom: 20px;
+  right: 20px;
+  background: #f1c40f;
+}
+
+.abm-tutorial-ship {
+  position: absolute;
+  top: 56px;
+  left: 100px;
+  width: 8px;
+  height: 8px;
+  background: #e74c3c;
+  border-radius: 50%;
+  animation: ship-move 2s infinite ease-in-out;
+}
+
+.abm-tutorial-discharge {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #f39c12;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.abm-tutorial-discharge.discharge-1 {
+  top: 58px;
+  left: 55px;
+  animation: discharge-fade 1.5s infinite ease-in-out;
+}
+
+.abm-tutorial-discharge.discharge-2 {
+  top: 58px;
+  left: 62px;
+  animation: discharge-fade 1.5s infinite ease-in-out 0.2s;
+}
+
+.abm-tutorial-discharge.discharge-3 {
+  top: 58px;
+  left: 69px;
+  animation: discharge-fade 1.5s infinite ease-in-out 0.4s;
+}
+
+.abm-tutorial-discharge.discharge-4 {
+  top: 58px;
+  left: 76px;
+  animation: discharge-fade 1.5s infinite ease-in-out 0.6s;
+}
+
+.abm-tutorial-discharge.discharge-5 {
+  top: 58px;
+  left: 83px;
+  animation: discharge-fade 1.5s infinite ease-in-out 0.8s;
+}
+
+@keyframes ship-move {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(40px); }
+}
+
+@keyframes discharge-fade {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.abm-tutorial-caption {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+}
+
+.abm-tutorial-start-text {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-top: 20px;
+}
+
+/* Explanation blocks for page 2 */
+.abm-tutorial-explanation-blocks {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.abm-tutorial-block {
+  flex: 1;
+  min-width: 200px;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.abm-tutorial-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #3498db;
+  position: relative;
+}
+
+.abm-tutorial-icon.ship-types {
+  background: #3498db;
+}
+
+.abm-tutorial-icon.movement {
+  background: #27ae60;
+}
+
+.abm-tutorial-icon.pollution {
+  background: #f39c12;
+}
+
+.abm-tutorial-ship-cargo,
+.abm-tutorial-ship-tanker,
+.abm-tutorial-ship-other {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.abm-tutorial-ship-cargo {
+  background: #3498db;
+  top: 15px;
+  left: 20px;
+}
+
+.abm-tutorial-ship-tanker {
+  background: #9b59b6;
+  top: 25px;
+  left: 30px;
+}
+
+.abm-tutorial-ship-other {
+  background: #95a5a6;
+  top: 35px;
+  left: 25px;
+}
+
+.abm-tutorial-grid-small {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  position: relative;
+}
+
+.abm-tutorial-path {
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+  transform: translateY(-50%);
+}
+
+.abm-tutorial-discharge-trail {
+  width: 30px;
+  height: 6px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.8) 50%, transparent 100%);
+  border-radius: 3px;
+}
+
+/* Policy grid for page 3 */
+.abm-tutorial-policy-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
+}
+
+.abm-tutorial-policy-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.abm-tutorial-policy-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: white;
+  border: 2px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+.abm-tutorial-port-ban {
+  color: #27ae60;
+  font-size: 20px;
+}
+
+.abm-tutorial-port-subsidy {
+  color: #3498db;
+  font-size: 20px;
+}
+
+.abm-tutorial-port-tax {
+  color: #f1c40f;
+  font-size: 20px;
+}
+
+.abm-tutorial-port-allow {
+  color: #2c3e50;
+  font-size: 20px;
+}
+
+.abm-tutorial-policy-text {
+  flex: 1;
+  text-align: left;
+}
+
+.abm-tutorial-policy-text h4 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.abm-tutorial-policy-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+}
+
+.abm-tutorial-economic-note {
+  font-style: italic;
+  color: #666;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+  margin-top: 20px;
+}
+
+/* Insights grid for page 4 */
+.abm-tutorial-insights-grid {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+  margin: 20px 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.abm-tutorial-insight-item {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.abm-tutorial-chart {
+  width: 120px;
+  height: 80px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.abm-tutorial-chart.sankey {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+.abm-tutorial-chart.revenue {
+  background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+}
+
+.abm-tutorial-sankey-flow {
+  width: 80px;
+  height: 40px;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0.3) 0%, 
+    rgba(255, 255, 255, 0.6) 30%, 
+    rgba(255, 255, 255, 0.3) 60%, 
+    rgba(255, 255, 255, 0.6) 100%);
+  border-radius: 20px;
+}
+
+.abm-tutorial-revenue-chart {
+  width: 60px;
+  height: 50px;
+  background: linear-gradient(180deg, 
+    rgba(255, 255, 255, 0.8) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0.8) 100%);
+  border-radius: 4px;
+}
+
+.abm-tutorial-insights-note {
+  font-style: italic;
+  color: #666;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+  margin-top: 20px;
+}
+
+/* Controls demo for page 5 */
+.abm-tutorial-controls-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px 0;
+}
+
+.abm-tutorial-control-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.abm-tutorial-control-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.abm-tutorial-control-icon.speed {
+  background: #27ae60;
+}
+
+.abm-tutorial-control-icon.policy {
+  background: #9b59b6;
+}
+
+.abm-tutorial-speed-control {
+  width: 30px;
+  height: 30px;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+}
+
+.abm-tutorial-speed-control::after {
+  content: '▶';
+  position: absolute;
+  top: 50%;
+  left: 55%;
+  transform: translate(-50%, -50%);
+  color: #27ae60;
+  font-size: 12px;
+}
+
+.abm-tutorial-policy-selector {
+  width: 40px;
+  height: 20px;
+  background: white;
+  border-radius: 4px;
+  position: relative;
+}
+
+.abm-tutorial-policy-selector::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 2px;
+  background: #9b59b6;
+}
+
+.abm-tutorial-control-text {
+  flex: 1;
+  text-align: left;
+}
+
+.abm-tutorial-control-text h4 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+.abm-tutorial-control-text p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+}
+
+.abm-tutorial-final-message {
+  background: white;
+  color: #2c3e50;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 20px;
+  text-align: center;
+  border: 2px solid #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+.abm-tutorial-final-message h3 {
+  margin: 0 0 10px 0;
+  color: #3498db;
+  font-size: 20px;
+}
+
+.abm-tutorial-final-message p {
+  margin: 0;
+  color: #555;
+}
+
+/* Navigation buttons */
+.abm-tutorial-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+
+.abm-tutorial-left-space,
+.abm-tutorial-middle-buttons,
+.abm-tutorial-right-button {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.abm-tutorial-left-space {
+  justify-content: flex-start;
+}
+
+.abm-tutorial-right-button {
+  justify-content: flex-end;
+}
+
+.abm-tutorial button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.abm-tutorial-button-skip {
+  background: #95a5a6;
+  color: white;
+}
+
+.abm-tutorial-button-skip:hover {
+  background: #7f8c8d;
+}
+
+.abm-tutorial-button-back {
+  background: #bdc3c7;
+  color: #2c3e50;
+}
+
+.abm-tutorial-button-back:hover {
+  background: #95a5a6;
+  color: white;
+}
+
+.abm-tutorial-button-next {
+  background: #3498db;
+  color: white;
+}
+
+.abm-tutorial-button-next:hover {
+  background: #2980b9;
+}
+
+.abm-tutorial-button-start {
+  background: #3498db;
+  color: white;
+  font-weight: 600;
+}
+
+.abm-tutorial-button-start:hover {
+  background: #2980b9;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .abm-tutorial-overlay {
+    padding: 10px;
+  }
+
+  .abm-tutorial {
+    width: 90%;
+    height: 55vh;
+    padding: 15px;
+  }
+
+  .abm-tutorial-content {
+    height: 35vh;
+  }
+
+  .abm-tutorial-page h2 {
+    font-size: 22px;
+  }
+
+  .abm-tutorial-page h3 {
+    font-size: 16px;
+  }
+
+  .abm-tutorial-page p {
+    font-size: 14px;
+  }
+
+  .abm-tutorial-explanation-blocks {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .abm-tutorial-block {
+    min-width: auto;
+    max-width: none;
+  }
+
+  .abm-tutorial-insights-grid {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .abm-tutorial-control-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .abm-tutorial-control-text {
+    text-align: center;
+  }
+
+  .abm-tutorial-control-text p {
+    text-align: center;
+  }
+
+  .abm-tutorial-buttons {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  .abm-tutorial-left-space,
+  .abm-tutorial-middle-buttons,
+  .abm-tutorial-right-button {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .abm-tutorial-overlay {
+    padding: 5px;
+  }
+
+  .abm-tutorial {
+    width: 95%;
+    height: 60vh;
+    padding: 15px 10px;
+  }
+
+  .abm-tutorial-content {
+    height: 360px;
+  }
+
+  .abm-tutorial-page {
+    padding: 0 2%;
+  }
+
+  .abm-tutorial-page h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .abm-tutorial-page h3 {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .abm-tutorial-page p {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .abm-tutorial-grid {
+    width: 150px;
+    height: 90px;
+  }
+
+  .abm-tutorial-policy-item {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .abm-tutorial-policy-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .abm-tutorial-port-ban,
+  .abm-tutorial-port-subsidy,
+  .abm-tutorial-port-tax {
+    font-size: 16px;
+  }
+
+  .abm-tutorial-chart {
+    width: 100px;
+    height: 60px;
+  }
+
+  .abm-tutorial-control-item {
+    padding: 15px;
+  }
+
+  .abm-tutorial-control-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .abm-tutorial-final-message {
+    padding: 20px;
+  }
+
+  .abm-tutorial-final-message h3 {
+    font-size: 18px;
+  }
+
+  .abm-tutorial button {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .abm-tutorial-buttons {
+    padding: 10px;
+  }
+
+  .abm-tutorial-progress-dot {
+    font-size: 20px;
+    margin: 0 3px;
+  }
+
+  .abm-tutorial-close-button {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media (max-width: 320px) {
+  .abm-tutorial {
+    height: 65vh;
+    padding: 10px 8px;
+  }
+
+  .abm-tutorial-content {
+    height: 25vh;
+  }
+
+  .abm-tutorial-page h2 {
+    font-size: 18px;
+    margin-top: 10px;
+  }
+
+  .abm-tutorial-page h3 {
+    font-size: 14px;
+  }
+
+  .abm-tutorial-page p {
+    font-size: 12px;
+  }
+
+  .abm-tutorial-grid {
+    width: 120px;
+    height: 70px;
+  }
+
+  .abm-tutorial-policy-text h4 {
+    font-size: 14px;
+  }
+
+  .abm-tutorial-policy-text p {
+    font-size: 12px;
+  }
+
+  .abm-tutorial-control-text h4 {
+    font-size: 14px;
+  }
+
+  .abm-tutorial-control-text p {
+    font-size: 12px;
+  }
+
+  .abm-tutorial button {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .abm-tutorial-progress-dot {
+    font-size: 18px;
+    margin: 0 2px;
+  }
+
+  .abm-tutorial-final-message {
+    padding: 15px;
+  }
+
+  .abm-tutorial-final-message h3 {
+    font-size: 16px;
+  }
+
+  .abm-tutorial-final-message p {
+    font-size: 12px;
+  }
+}
+
+/* Ensure proper scrolling on mobile devices */
+@media (max-height: 600px) {
+  .abm-tutorial {
+    height: 55vh;
+  }
+
+  .abm-tutorial-page h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .abm-tutorial-page p {
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-height: 550px) and (max-width: 768px) {
+  .abm-tutorial-page h2 {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+} 

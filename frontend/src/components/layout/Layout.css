@@ -1,0 +1,121 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  --header-height: 60px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  margin-top: var(--header-height); /* Add margin for regular pages */
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #f5f7f9;
+  transition: margin-top 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Add transition for smooth filling */
+}
+
+/* Special styles for transparent header layout (homepage only) */
+.transparent-header .main-content {
+  margin-top: 0; /* No top margin needed for transparent header */
+  padding-top: 0;
+}
+
+/* Special styles for map page */
+.main-content .map-page {
+  width: 100%;
+  height: 100%; /* Make map page take full height of main-content */
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Add transition for smooth height change */
+}
+
+/* Special styles for no-footer layout */
+.no-footer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.no-footer .main-content {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  height: calc(100vh - var(--header-height, 60px));
+  max-height: calc(100vh - var(--header-height, 60px));
+  overflow: hidden;
+}
+
+.no-footer .map-page,
+.no-footer .map-container {
+  height: 100%;
+  margin-bottom: 0;
+}
+
+/* For mobile views, ensure content fills the space properly */
+@media (max-width: 1024px) {
+  /* Adjust variables when header is collapsed to ensure content fills the space */
+  .layout:has(.header.collapsed) {
+    --header-height: 0px; /* Set to 0 when header is collapsed */
+  }
+  
+  /* When header is collapsed, allow content to expand upward */
+  .layout:has(.header.collapsed) .main-content {
+    margin-top: 0; /* Remove margin completely when header is collapsed */
+    height: 100vh;
+    max-height: 100vh;
+  }
+  
+  /* When header is collapsed, make map page take full viewport height */
+  .layout:has(.header.collapsed) .main-content .map-page {
+    height: 100vh; /* Full viewport height */
+  }
+  
+  /* Transparent header should still have no margin */
+  .transparent-header .main-content {
+    margin-top: 0;
+  }
+}
+
+/* Map layout specific styles to ensure header is fixed and map fills the viewport */
+.map-layout-container {
+  overflow: hidden;
+  height: 100vh;
+  max-height: 100vh;
+  position: relative;
+}
+
+/* Handle collapsed header in map pages */
+body.map-header-collapsed .map-layout-container .main-content {
+  margin-top: 0;
+  height: 100vh;
+  max-height: 100vh;
+}
+
+/* Prevent page scrolling when viewing map */
+body.map-header-collapsed {
+  overflow: hidden;
+}
+
+/* Fix for iOS Safari 100vh issue */
+@supports (-webkit-touch-callout: none) {
+  .map-layout-container, 
+  .map-page, 
+  .map-container {
+    height: -webkit-fill-available;
+  }
+  
+  .map-layout-container .main-content {
+    height: calc(-webkit-fill-available - var(--header-height, 60px));
+  }
+  
+  body.map-header-collapsed .map-layout-container .main-content {
+    height: -webkit-fill-available;
+  }
+} 

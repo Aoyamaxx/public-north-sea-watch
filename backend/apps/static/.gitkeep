@@ -1,0 +1,2 @@
+# This file ensures that the static directory is tracked by Git
+# The directory is needed for Django's static files collection 

@@ -1,0 +1,13 @@
+# Include base requirements
+-r base.txt
+
+# Server
+uvicorn>=0.27.1,<0.28.0
+gunicorn>=23.0.0,<23.1.0
+
+# Channels
+channels>=4.0.0,<4.1.0
+
+# Development tools
+watchdog[watchmedo]>=3.0.0,<3.1.0
+django-debug-toolbar>=4.3.0,<4.4.0 

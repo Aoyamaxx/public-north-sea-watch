@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      target: production
+    container_name: backend-prod
+    restart: always
+    env_file:
+      - .env.production
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+    depends_on:
+      - cloudsql-proxy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    volumes:
+      - ./cloudsql-auth.json:/secrets/cloudsql-auth.json:ro
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+      - ./crontab:/etc/cron.d/cleanup-cron
+    privileged: true
+    # Ensure we have permissions to manage services
+    cap_add:
+      - SYS_ADMIN
+
+  cloudsql-proxy:
+    image: gcr.io/cloudsql-docker/gce-proxy:latest
+    container_name: cloudsql-proxy
+    restart: always
+    command: [
+      "/cloud_sql_proxy",
+      "-dir=/cloudsql",
+      "-instances=north-sea-watch:europe-west4:ais-database=tcp:0.0.0.0:5432",
+      "-credential_file=/secrets/cloudsql-auth.json"
+    ]
+    volumes:
+      - ./cloudsql-auth.json:/secrets/cloudsql-auth.json:ro 

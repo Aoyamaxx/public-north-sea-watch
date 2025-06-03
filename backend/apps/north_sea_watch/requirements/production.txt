@@ -1,0 +1,14 @@
+# Include base requirements
+-r base.txt
+
+# Server
+uvicorn>=0.27.1,<0.28.0
+gunicorn>=23.0.0,<23.1.0
+
+# Channels
+channels>=4.0.0,<4.1.0
+
+# Production tools
+sentry-sdk>=2.8.0,<2.9.0
+django-storages>=1.14.2,<1.15.0
+whitenoise>=6.6.0,<6.7.0 

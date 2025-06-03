@@ -1,0 +1,132 @@
+.footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  padding: 2rem 0 1rem;
+  color: #555;
+  width: 100%;
+}
+
+.footer .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 1.5rem;
+  padding-right: 2rem;
+}
+
+.footer-section h3 {
+  color: #3498db;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  position: relative;
+}
+
+.footer-section h3 .radar-logo {
+  height: 45px;
+  width: auto;
+  margin-right: 10px;
+}
+
+.footer-section h3 .footer-title {
+  display: inline-block;
+}
+
+.footer-section:nth-child(2) h3,
+.footer-section:nth-child(3) h3 {
+  margin-left: 55px;
+}
+
+.footer-section:nth-child(2) p,
+.footer-section:nth-child(2) ul,
+.footer-section:nth-child(3) p,
+.footer-section:nth-child(3) ul {
+  margin-left: 55px;
+}
+
+.footer-section p {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section ul li a {
+  color: #555;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-section ul li a:hover {
+  color: #3498db;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+  font-size: 0.9rem;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+  }
+  
+  .footer-section {
+    padding-right: 0;
+    margin-bottom: 2rem;
+    width: 100%;
+  }
+  
+  .footer-section h3.section-header {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+  
+  .footer-section:nth-child(2) h3,
+  .footer-section:nth-child(3) h3 {
+    margin-left: 0;
+  }
+  
+  .footer-section:nth-child(2) p,
+  .footer-section:nth-child(2) ul,
+  .footer-section:nth-child(3) p,
+  .footer-section:nth-child(3) ul {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-section h3 {
+    height: 40px;
+  }
+  
+  .footer-section h3 .radar-logo {
+    height: 35px;
+    margin-right: 10px;
+  }
+} 

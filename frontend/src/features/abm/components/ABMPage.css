@@ -1,0 +1,781 @@
+.abm-page {
+  width: 100%;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.content-section {
+  padding: 30px 0;
+  background-color: #f5f7f9;
+  min-height: auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.abm-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.abm-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.visualization-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.loading-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 18px;
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.abm-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.error-message {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.error-message h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #d32f2f;
+}
+
+.error-message p {
+  margin: 0;
+  color: #c62828;
+  font-size: 14px;
+}
+
+.simulation-info-panel {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.simulation-info-panel h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+  color: #3498db;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.simulation-info-panel p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+}
+
+.simulation-info-panel p strong {
+  color: #333;
+}
+
+.legend-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.legend-icon {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.legend-icon.port-ban {
+  color: green;
+}
+
+.legend-icon.port-allow {
+  color: black;
+}
+
+.legend-icon.ship-regular {
+  color: #00b300; /* Green for regular ships */
+}
+
+.legend-icon.ship-scrubber {
+  color: #ff0000; /* Red for ships with scrubbers */
+}
+
+.legend-icon.trail {
+  color: orange; /* Orange for scrubber discharge */
+}
+
+.legend-icon.port-tax {
+  color: #FFD700; /* Yellow for ports that tax scrubbers */
+}
+
+.legend-icon.port-subsidy {
+  color: blue; /* Blue for ports that subsidize scrubbers */
+}
+
+.legend-icon.ship-red {
+  color: red; /* Red for ships with scrubbers */
+}
+
+.legend-icon.ship-cargo {
+  color: blue; /* Blue for cargo ships */
+}
+
+.legend-icon.ship-tanker {
+  color: navy; /* Navy for tanker ships */
+}
+
+.legend-icon.ship-fishing {
+  color: #FFD700; /* Gold/yellow for fishing vessels */
+}
+
+.legend-icon.ship-passenger {
+  color: pink; /* Pink for passenger vessels */
+}
+
+.legend-icon.ship-other {
+  color: gray; /* Gray for other vessel types */
+}
+
+.legend-icon.ship-tug {
+  color: orange; /* Orange for tug boats */
+}
+
+.legend-icon.ship-hsc {
+  color: purple; /* Purple for high-speed craft */
+}
+
+.legend-icon.ship-dredging {
+  color: brown; /* Brown for dredging vessels */
+}
+
+.legend-icon.ship-search {
+  color: green; /* Green for search and rescue vessels */
+}
+
+.loading-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: #3498db;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add a utility class to show elements only on desktop */
+.desktop-only {
+  display: block; /* Visible by default on desktop */
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .abm-content {
+    grid-template-columns: 1fr;
+  }
+  
+  /* On tablet and mobile, show About section first */
+  .abm-sidebar {
+    order: 0; /* Show sidebar first on tablet/mobile */
+  }
+  
+  /* Set sidebar items order */
+  .simulation-info-panel {
+    order: 0; /* About section first */
+    margin-bottom: 16px;
+  }
+  
+  .simulation-dashboard {
+    order: 1; /* Simulation dashboard second */
+    margin-bottom: 16px;
+  }
+  
+  /* For tablet and mobile, ensure loading indicator container has fixed height */
+  .loading-indicator-container {
+    min-height: 100px; /* Slightly smaller than desktop but still fixed */
+    margin-bottom: 8px;
+  }
+  
+  /* Ensure placeholder is visible with adjusted height */
+  .indicator-placeholder {
+    height: 100px; /* Match the container min-height */
+    display: flex; /* Ensure it's visible */
+  }
+  
+  .status-text {
+    font-size: 15px; /* Slightly smaller font for tablets */
+  }
+  
+  /* Hide desktop-only elements on tablet and mobile */
+  .desktop-only {
+    display: none !important; /* Force hide on tablet and mobile */
+  }
+}
+
+@media (max-width: 768px) {
+  /* Use CSS Grid for specific ordering on mobile */
+  .container > * {
+    width: 100%;
+  }
+  
+  /* Ensure proper ordering of components */
+  .abm-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px; /* Add margin to reduce space on tablets */
+  }
+  
+  .abm-main {
+    order: 5; /* Visualization at the bottom */
+  }
+  
+  .abm-sidebar {
+    order: 0; /* Sidebar components at the top */
+    margin-bottom: 10px;
+  }
+  
+  .simulation-info-panel {
+    order: 0; /* About section first */
+    margin-bottom: 10px;
+    padding: 16px;
+    margin-top: 50px; /* Add top margin to avoid header dropdown overlap */
+  }
+  
+  .simulation-dashboard {
+    order: 1; /* Simulation data second */
+    margin-bottom: 10px;
+  }
+  
+  /* Maintain same order as desktop - loading indicator first, then status */
+  .loading-indicator-container {
+    order: 3; /* Loading indicator above status */
+    margin-bottom: 3px;
+    min-height: 80px; /* Fixed height for mid-size screens */
+  }
+  
+  /* Adjust placeholder height to match container */
+  .indicator-placeholder {
+    height: 80px;
+  }
+  
+  .status-text {
+    font-size: 14px; /* Smaller font for mobile devices */
+    padding: 0 10px;
+  }
+  
+  .simulation-status-container {
+    order: 4; /* Status below loading indicator */
+    margin-bottom: 3px;
+    min-height: 50px; /* Maintain fixed height for status */
+  }
+}
+
+@media (max-width: 480px) {
+  /* Force width limitations to prevent overflow */
+  .loading-indicator .progress-section {
+    max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Even more compact on mobile */
+  .error-card, 
+  .simulation-ready {
+    padding: 10px;
+    margin: 8px 0;
+  }
+  
+  /* Ensure proper ordering of components */
+  .abm-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Reduce gap between components */
+  }
+  
+  .abm-sidebar {
+    order: 0; /* Sidebar components at the top */
+    margin-bottom: 8px; /* Reduced from 10px */
+  }
+  
+  .simulation-info-panel {
+    order: 0; /* About section first */
+    margin-bottom: 8px; /* Reduced from 10px */
+    padding: 14px;
+    margin-top: 40px; /* Slightly less top margin for smaller screens */
+  }
+  
+  .simulation-dashboard {
+    order: 1; /* Simulation data second */
+    margin-bottom: 8px; /* Reduced from 10px */
+  }
+  
+  /* Maintain same order as larger screens */
+  .loading-indicator-container {
+    order: 3; /* Loading indicator above status */
+    margin-bottom: 2px;
+    min-height: 70px; /* Smaller fixed height for mobile */
+  }
+  
+  /* Adjust placeholder height to match container */
+  .indicator-placeholder {
+    height: 70px;
+  }
+  
+  .status-text {
+    font-size: 13px; /* Even smaller font for small mobile devices */
+  }
+  
+  .simulation-status-container {
+    order: 4; /* Status below loading indicator */
+    margin-bottom: 2px;
+    min-height: 50px;
+  }
+  
+  .abm-main {
+    order: 5; /* Visualization and controls at the bottom */
+    gap: 8px; /* Reduced from 24px */
+  }
+  
+  /* Make loading indicator more compact */
+  .loading-indicator {
+    padding: 10px 8px;
+    margin-bottom: 0;
+  }
+  
+  .content-section {
+    padding: 15px 0 15px; /* Adjusted top and bottom padding */
+  }
+  
+  .visualization-container {
+    height: 300px;
+    margin-bottom: 10px; /* Add margin to reduce space on mobile */
+  }
+  
+  /* Adjust loading indicator for smaller screens */
+  .loading-indicator .loading-content {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  .loading-indicator .progress-container {
+    width: 90%; /* Make progress bar slightly narrower on mobile */
+  }
+  
+  /* Ensure icons are properly spaced on very small screens */
+  .loading-indicator .loading-step {
+    padding: 0 5px;
+  }
+  
+  .retry-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 80%;
+    margin: 10px auto 0;
+    display: block;
+  }
+}
+
+.error-card {
+  background-color: #ffebee;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 100%;
+}
+
+.error-card-container {
+  width: 100%;
+  margin-bottom: 8px;
+  order: 4; /* Same order as loading indicator */
+  display: flex;
+  justify-content: center;
+}
+
+.error-card h3 {
+  margin-top: 0;
+  color: #d32f2f;
+  font-size: 18px;
+}
+
+.error-card p {
+  margin: 10px 0;
+  color: #b71c1c;
+}
+
+.retry-button {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.retry-button:hover {
+  background-color: #1565c0;
+}
+
+.simulation-ready {
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+  border-left: 5px solid #4caf50;
+}
+
+.simulation-ready h3 {
+  margin-top: 0;
+  color: #2e7d32;
+  font-size: 18px;
+}
+
+.simulation-ready p {
+  margin: 10px 0;
+  color: #388e3c;
+}
+
+.simulation-status-container {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  margin-top: 0;
+  padding: 0;
+  min-height: 60px; /* Set a fixed minimum height for the status indicator container */
+  width: 100%;
+  position: relative; /* Enable positioning context */
+}
+
+.simulation-status-indicator {
+  position: absolute; /* Position the status indicator absolute within its container */
+  top: 0;
+  left: 0;
+  /* Other styles will be inherited from its own CSS file */
+}
+
+.loading-indicator-container {
+  margin-bottom: 8px;
+  width: 100%;
+  padding: 0;
+  min-height: 120px; /* Set a fixed minimum height for the loading indicator container */
+  position: relative; /* Enable positioning context */
+}
+
+.loading-indicator-container .loading-indicator {
+  /* Loading indicator styles from LoadingIndicator.css are preserved */
+  position: absolute; /* Position the loading indicator absolute within its container */
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.simulation-dashboard {
+  width: 100%;
+}
+
+/* Add an indicator placeholder to maintain space even when indicator is hidden */
+.indicator-placeholder {
+  width: 100%;
+  visibility: visible; /* Make it visible to show status text */
+  height: 120px; /* Match the min-height of the container */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f7f9; /* Light background */
+  border-radius: 8px;
+}
+
+.placeholder-content {
+  text-align: center;
+  padding: 15px;
+}
+
+.status-text {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  opacity: 0.7; /* Slightly faded to indicate it's a passive state */
+}
+
+.status-text.waiting {
+  color: #666; /* Neutral gray for waiting state */
+}
+
+.status-text.complete {
+  color: #4caf50; /* Green for completion state */
+}
+
+.status-icon {
+  display: inline-block;
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+/* Desktop layout - use grid for desktop */
+@media (min-width: 1025px) {
+  .abm-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 350px;
+    grid-template-rows: auto auto 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .abm-sidebar {
+    grid-column: 2;
+    grid-row: 1 / span 3; /* Span all rows */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Switch order of dashboard and info panel */
+  .simulation-dashboard {
+    order: 1; /* Place dashboard first on desktop */
+  }
+  
+  .simulation-info-panel {
+    order: 2; /* Place about section second on desktop */
+    margin-top: 37.5px;
+  }
+  
+  /* Swap positions of loading indicator and status indicator on desktop */
+  .loading-indicator-container {
+    grid-column: 1;
+    grid-row: 1; /* Moved to first row */
+    margin-bottom: 12px;
+    min-height: 120px; /* Maintain consistent height on desktop */
+  }
+  
+  .simulation-status-container {
+    grid-column: 1;
+    grid-row: 2; /* Moved to second row */
+    margin-bottom: 12px;
+    min-height: 60px; /* Maintain consistent height on desktop */
+  }
+  
+  .abm-main {
+    grid-column: 1;
+    grid-row: 3;
+    margin-bottom: 0;
+  }
+  
+  .visualization-container {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .error-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .error-card-container {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+
+/* These CSS classes are used for the port/ship coloring in the visualization */
+.ship-red {
+  color: red;
+}
+
+.ship-cargo {
+  color: blue;
+}
+
+.ship-tanker {
+  color: navy;
+}
+
+.ship-fishing {
+  color: #FFD700; /* gold/yellow */
+}
+
+.ship-passenger {
+  color: #FFC0CB; /* pink */
+}
+
+.ship-tug {
+  color: orange;
+}
+
+.ship-hsc {
+  color: purple;
+}
+
+.ship-dredging {
+  color: brown;
+}
+
+.ship-search {
+  color: green;
+}
+
+.ship-other {
+  color: gray;
+}
+
+.port-allow {
+  color: green;
+}
+
+.port-ban {
+  color: red;
+}
+
+.port-tax {
+  color: #FFD700; /* yellow */
+}
+
+.port-subsidy {
+  color: blue;
+}
+
+.trail {
+  color: orange;
+}
+
+/* ABM Tutorial button styles */
+.abm-tutorial-button {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  z-index: 999;
+  background-color: #3498db;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.abm-tutorial-button:hover {
+  background-color: #2980b9;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.abm-tutorial-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.abm-tutorial-button svg {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+/* Responsive adjustments for tutorial button */
+@media (max-width: 768px) {
+  .abm-tutorial-button {
+    width: 32px;
+    height: 32px;
+    left: 15px;
+  }
+
+  .abm-tutorial-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .abm-tutorial-button {
+    width: 30px;
+    height: 30px;
+    left: 12px;
+  }
+
+  .abm-tutorial-button svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 320px) {
+  .abm-tutorial-button {
+    width: 28px;
+    height: 28px;
+    left: 10px;
+  }
+
+  .abm-tutorial-button svg {
+    width: 16px;
+    height: 16px;
+  }
+} 
