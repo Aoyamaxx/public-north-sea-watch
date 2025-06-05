@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './SimulationDashboard.css';
 import Plot from 'react-plotly.js';
+import { Data, Layout } from 'plotly.js';
 
 interface SimulationDashboardProps {
   modelData: {
@@ -29,6 +30,8 @@ interface SimulationDashboardProps {
     CountryRevenues?: { [country: string]: { step: number; revenue: number }[] };
     AmsterdamRevenue?: number;
     step_count?: number;
+    // Add scrubber pollution timeseries data
+    ScrubberPollutionTimeseries?: { step: number; pollution: number }[];
     [key: string]: any;
   };
   // Add stepCount prop that comes directly from the ABM context
@@ -221,7 +224,59 @@ const SimulationDashboard: React.FC<SimulationDashboardProps> = ({ modelData, st
   const availablePorts = modelData.PortRevenues ? 
     Object.keys(modelData.PortRevenues).sort() : defaultPorts.sort();
   
+  // Prepare data for scrubber pollution timeseries plot
+  const preparePollutionTimeseriesData = (): Data[] => {
+    if (!modelData.ScrubberPollutionTimeseries || modelData.ScrubberPollutionTimeseries.length === 0) {
+      return [];
+    }
 
+    return [{
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Scrubber Pollution',
+      x: modelData.ScrubberPollutionTimeseries.map(point => point.step),
+      y: modelData.ScrubberPollutionTimeseries.map(point => point.pollution), // Use original pollution values
+      line: {
+        color: '#e74c3c',
+        width: 2
+      },
+      marker: {
+        size: 6,
+        color: '#e74c3c'
+      }
+    }];
+  };
+
+  // Prepare layout for scrubber pollution timeseries plot
+  const preparePollutionTimeseriesLayout = (): Partial<Layout> => ({
+    autosize: true,
+    font: {
+      size: 12
+    },
+    margin: {
+      l: 50,
+      r: 20,
+      b: 50,
+      t: 20,
+      pad: 4
+    },
+    xaxis: {
+      title: {
+        text: 'Simulation Step'
+      },
+      showgrid: true,
+      gridcolor: '#f0f0f0'
+    },
+    yaxis: {
+      title: {
+        text: 'Total Discharge (Tonnes)'
+      },
+      showgrid: true,
+      gridcolor: '#f0f0f0'
+    },
+    plot_bgcolor: 'white',
+    paper_bgcolor: 'white'
+  });
   
   return (
     <div className="simulation-dashboard">
@@ -380,11 +435,20 @@ const SimulationDashboard: React.FC<SimulationDashboardProps> = ({ modelData, st
         {activeTab === 'summary' && (
           <div className="summary-container">
             <div className="dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <div className="dashboard-card pollution-placeholder" style={{ gridColumn: '1 / -1', backgroundColor: '#f0f0f0', borderRadius: '8px', padding: '16px', marginBottom: '16px', height: '60vh', display: 'flex', flexDirection: 'column' }}>
-                <h4 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>Scrubber Pollution by Area</h4>
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#e0e0e0', borderRadius: '4px' }}>
-                  <p style={{ color: '#666', fontWeight: 'medium', fontSize: '18px' }}>Placeholder</p>
-                </div>
+              <div className="dashboard-card pollution-chart" style={{ gridColumn: '1 / -1', backgroundColor: 'white', borderRadius: '8px', padding: '16px', marginBottom: '16px', height: '60vh', display: 'flex', flexDirection: 'column' }}>
+                <h4 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>Scrubber Pollution Over Time</h4>
+                {modelData.ScrubberPollutionTimeseries && modelData.ScrubberPollutionTimeseries.length > 0 ? (
+                  <Plot
+                    data={preparePollutionTimeseriesData()}
+                    layout={preparePollutionTimeseriesLayout()}
+                    style={{ width: '100%', height: '100%' }}
+                    config={{ responsive: true }}
+                  />
+                ) : (
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+                    <p style={{ color: '#666', fontWeight: 'medium', fontSize: '18px' }}>No pollution data available yet. Please run the simulation longer.</p>
+                  </div>
+                )}
               </div>
               
               <div className="dashboard-card" style={{ padding: '12px', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center' }}>

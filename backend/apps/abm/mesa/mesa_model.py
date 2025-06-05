@@ -395,6 +395,7 @@ class ShipPortModel(Model):
                 "NonScrubberShipTypesToDestinations": lambda m: m._get_ship_types_to_destinations('non-scrubber'),
                 "CountryRevenues": lambda m: m._get_country_revenues(),
                 "PortRevenues": lambda m: m._get_port_revenues(),
+                "ScrubberPollutionTimeseries": lambda m: m._get_scrubber_pollution_timeseries(),
             },
             tables = {}
         )
@@ -753,6 +754,36 @@ class ShipPortModel(Model):
             import traceback
             traceback.print_exc()
             return False  # Signal to stop the simulation
+
+    def _get_scrubber_pollution_timeseries(self):
+        """Collect scrubber pollution data over time"""
+        # Get all scrubber trails in the grid
+        scrubber_trails = [agent for agent in self.schedule.agents if isinstance(agent, ScrubberTrail)]
+        
+        # Calculate total pollution (sum of water units from all trails)
+        total_pollution = sum(trail.water_units for trail in scrubber_trails)
+        
+        # Define the scaling factor based on the ratio of real ships to simulation ships
+        # Assuming real-world data is based on ~3500 ships and simulation has 50 ships.
+        scaling_factor = 70  # Approx. 3500 / 50 = 70
+
+        # Scale UP the total pollution to be comparable to real-world data
+        scaled_pollution = total_pollution * scaling_factor
+
+        # Get current step
+        current_step = self.step_count if hasattr(self, 'step_count') else 0
+        
+        # Initialize or update the pollution history
+        if not hasattr(self, 'pollution_history'):
+            self.pollution_history = []
+        
+        # Add current pollution data point
+        self.pollution_history.append({
+            "step": current_step,
+            "pollution": scaled_pollution # Use scaled pollution
+        })
+        
+        return self.pollution_history
 
 
 def agent_portrayal(agent):
